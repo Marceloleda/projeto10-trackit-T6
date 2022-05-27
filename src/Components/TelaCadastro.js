@@ -18,8 +18,15 @@ export default function TelaCadastro(){
     useEffect(() => {
         const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up`;
         const promise = axios.post(URL, {
-            
+            email: cadastro.email,
+            senha: cadastro.senha,
+            nome: cadastro.nome,
+            foto:cadastro.foto
         })
+        promise.then((response) => {
+            console.log(response);
+        })
+        promise.catch(err => console.log(err.message))
     }, [])
     console.log(cadastro)
     return(
