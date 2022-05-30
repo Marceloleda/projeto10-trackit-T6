@@ -42,10 +42,11 @@ export default function App(){
                     </UserContext.Provider>
                 }/>
                 <Route path="/historico" element={
-                    <>
+                    <UserContext.Provider value={contextValue}>
+                        <Topo />
                         <TelaHistorico />
                         <MenuFooter/>
-                    </>
+                    </UserContext.Provider>
 
                     
                 }/>

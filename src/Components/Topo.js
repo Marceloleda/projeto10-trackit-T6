@@ -4,8 +4,8 @@ import UserContext from "../contexts/UserContext";
 
 export default function Topo(){
     const { tasks, setTasks } = useContext(UserContext);
-    localStorage.setItem('ImagePerfil', tasks.image)
-    const ImgPerfil = localStorage.getItem('ImagePerfil')
+    sessionStorage.setItem('ImagePerfil', tasks.image)
+    const ImgPerfil = sessionStorage.getItem('ImagePerfil')
     console.log(tasks)
     return(
         <>
