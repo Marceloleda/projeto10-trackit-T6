@@ -1,18 +1,43 @@
 import styled from 'styled-components';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, createContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
-
 import logo from "../Assets/img/Group 8.png"
+import { useContext } from "react";
+import UserContext from "../contexts/UserContext";
+
 
 
 
 export default function TelaLogin(){
+    const navigate = useNavigate();
+	const { tasks, setTasks } = useContext(UserContext);
+
     const [login, setLogin] = useState({
         email:"",
         senha:""
     });
-    console.log(login)
+
+    function singUp(event){
+        event.preventDefault();
+        const body ={
+            email: login.email,
+            password: login.senha
+        }
+        const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login`;
+        const promise = axios.post(URL, body)
+        
+        promise.then((response) => {
+            setTasks(response.data)
+            localStorage.setItem('TokenLogin', response.data.token)
+            navigate('/habitos');
+        })
+
+        promise.catch(err => {
+            alert(`Algo está errado! Verifique seus dados e tente novamente! =)`)
+            console.log(err.message)
+        });
+    }
     return(
         <> 
             <Imagem>
@@ -20,7 +45,7 @@ export default function TelaLogin(){
             </Imagem>
             <Login>
                 <Conteiner>
-                    <form>
+                    <form onSubmit={singUp}>
                         <CampoInfo id="email" type="email" placeholder="email" value={login.email} onChange={
                             (e) => setLogin({...login,
                                 email: e.target.value
@@ -31,7 +56,7 @@ export default function TelaLogin(){
                                 senha: e.target.value
                             })
                             } required />
-                        <Botao type="submit" >Entrar</Botao>
+                        <Botao type='submit' >Entrar</Botao>
                     </form>
                 </Conteiner>
             </Login>
@@ -52,7 +77,6 @@ const Imagem = styled.div`
         width: 180px;
         height: 178px;
     }
-
 `;
 const Conteiner = styled.div`
     margin-left:36px;
@@ -83,12 +107,12 @@ const CampoInfo = styled.input`
 const Botao = styled.button`
     width: 303px;
     height: 45px;
-    background: #52B6FF;
+    background: red;
     border-radius: 4.63636px;
     border:none;
     cursor: pointer;
 
-    font-family: 'Lexend Deca';
+    font-family:     'Lexend Deca';
     font-size: 20.976px;
     line-height: 26px;
     text-align: center;

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 import logo from "../Assets/img/Group 8.png"
@@ -9,26 +9,34 @@ import logo from "../Assets/img/Group 8.png"
 
 
 export default function TelaCadastro(){
+    const navigate = useNavigate();
+
     const [cadastro, setCadastro] = useState({
         email:"",
         senha:"",
         nome:"",
         foto:""
     });
-    useEffect(() => {
+    function cadastrar(event){
+        event.preventDefault();
         const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up`;
         const promise = axios.post(URL, {
             email: cadastro.email,
-            senha: cadastro.senha,
-            nome: cadastro.nome,
-            foto:cadastro.foto
+            name: cadastro.nome,
+            image:cadastro.foto,
+            password: cadastro.senha
         })
         promise.then((response) => {
-            console.log(response);
+            console.log('deu certo');
+            navigate('/');
+
         })
-        promise.catch(err => console.log(err.message))
-    }, [])
-    console.log(cadastro)
+        promise.catch(err => {
+            alert(`Algo deu errado, tente novamente! :: erro ${err.message}`)
+            console.log(err.message)
+        })
+    }
+    
     return(
         <> 
             <Imagem>
@@ -36,7 +44,7 @@ export default function TelaCadastro(){
             </Imagem>
             <Login>
                 <Conteiner>
-                    <form>
+                    <form onSubmit={cadastrar}>
                         <CampoInfo id="email" type="email" placeholder="email" value={cadastro.email} onChange={
                             (e) => setCadastro({...cadastro,
                                 email: e.target.value
@@ -57,7 +65,7 @@ export default function TelaCadastro(){
                                 foto: e.target.value
                             })
                             } required />
-                        <Botao type="submit" >Cadastrar</Botao>
+                        <Botao type='submit' >Cadastrar</Botao>
                     </form>
                 </Conteiner>
             </Login>
