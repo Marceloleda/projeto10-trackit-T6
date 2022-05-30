@@ -5,20 +5,26 @@ import MenuFooter from './MenuFooter'
 export default function TelaHistorico () {
     return (
 
-        <>
+        <Body>
             <Empurra/>
             <HistoryTitle>Histórico</HistoryTitle>
             <FutureHistory>Em breve, você poderá ver o histórico dos seus hábitos, aqui!</FutureHistory>
-        </>
+        </Body>
 
     );
 }
+const Body =styled.div`
+    background:#F2F2F2;
+    height: 530px;
+    padding: 18px;
+    box-sizing: border-box;
 
+
+`;
 const HistoryTitle = styled.div`
 
-    margin-top: 50px;
+    margin-top: 20px;
     margin-left: 15px;
-    width: 100px;
     height: 29px;
 
     font-family: 'Lexend Deca', sans-serif;
@@ -32,8 +38,7 @@ const FutureHistory = styled.div`
 
     margin-top: 15px;
     margin-left: 15px;
-    margin-bottom: 205px;
-    width: 338px;
+    margin-bottom: 235px;
     height: 74px;
 
     font-family: 'Lexend Deca', sans-serif;
