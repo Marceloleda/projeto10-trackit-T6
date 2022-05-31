@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 export default function MenuFooter(){
+
     return(
         <>
             <Footer>
@@ -30,4 +33,11 @@ const Footer = styled.div`
         text-align: center;
         color: #52B6FF;
         }
+`;
+const Porcentagem = styled.div`
+    position:fixed;
+    margin-top: 270px;
+    margin-left: 120px;
+    width: 100px; 
+    height: 100px;
 `;

@@ -15,18 +15,14 @@ export default function TelaHistorico () {
 }
 const Body =styled.div`
     background:#F2F2F2;
-    height: 530px;
+    height: 580px;
     padding: 18px;
     box-sizing: border-box;
-
-
 `;
 const HistoryTitle = styled.div`
 
     margin-top: 20px;
-    margin-left: 15px;
     height: 29px;
-
     font-family: 'Lexend Deca', sans-serif;
     font-size: 23px;
 

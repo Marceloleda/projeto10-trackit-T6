@@ -26,11 +26,11 @@ export default function TelaLogin(){
         }
         const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login`;
         const promise = axios.post(URL, body)
-        
+
         promise.then((response) => {
             setTasks(response.data)
-            localStorage.setItem('TokenLogin', response.data.token)
-            navigate('/habitos');
+            sessionStorage.setItem('TokenLogin', response.data.token)
+            navigate('/hoje');
         })
 
         promise.catch(err => {

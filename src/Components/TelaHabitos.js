@@ -4,12 +4,11 @@ import UserContext from "../contexts/UserContext";
 import {useState, useEffect } from "react";
 import axios from "axios";
 import check from "../Assets/img/check.png"
+import {CircularProgressbar, CircularProgressbarWithChildren, buildStyles} from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import MenuFooter from './MenuFooter';
 
 export default function TelaHabitos(){
-    const { tasks, setTasks } = useContext(UserContext);
-    const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem('TokenLogin')}` }
-    };
     const checkDays = [
         {id: 0, name: 'D'},
         {id: 1, name: 'S'},
@@ -19,35 +18,44 @@ export default function TelaHabitos(){
         {id: 5, name: 'S'},
         {id: 6, name: 'S'}    
     ];
-
-
+    
+    const config = {
+        headers: { Authorization: `Bearer ${localStorage.getItem('TokenLogin')}` }
+    };
+    
+    const [numPorcentage, setNumPorcentage] = useState();
+    const { tasks, setTasks } = useContext(UserContext);
     const [habits, setHabits] = useState ([]);
-    const [createHabits, setCreateHabits] = useState({
-        nome: "",
-        dias: ''
-    });
     const [habitoCriado, setHabitoCriado] = useState(false);
     const [diaSelecionado, setDiaSelecionado] =useState([])
     const [toggle, setToggle] = useState(true);
+    const [createHabits, setCreateHabits] = useState({
+        nome: ""
+    });
+    
+    console.log(createHabits)
+    console.log(toggle)
 
-    console.log(diaSelecionado)
 
-    useEffect(()=>{
+    function saveTask(event){
+        event.preventDefault();
+
         const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`;
         const promise = axios.post(URL, {
             name: createHabits.nome,
-            days: createHabits.dias
+            days: diaSelecionado
         }, config);
 
         promise.then((response) => {
             console.log('deu certo')
+            console.log(response);
         })
 
         promise.catch((err) => {
             console.log('deu ruim')
             console.log(err.message)
         })
-    },[])
+    }
 
     function selecionadoDia (id) {
         if (diaSelecionado.includes(id)) {
@@ -64,32 +72,35 @@ export default function TelaHabitos(){
             return(
                 <>
                     <TaskHabit>
-                        <InputHabit id="nome" type="text" placeholder="nome do hábito" value={createHabits.nome} onChange={
-                            (e) => setCreateHabits({...createHabits,
-                                nome: e.target.value
+                        <form onSubmit={saveTask}>
+                            <InputHabit id="nome" type="text" placeholder="nome do hábito" value={createHabits.nome} onChange={
+                                (e) => setCreateHabits({...createHabits,
+                                    nome: e.target.value
+                                })}
+                            />
+                            {checkDays.map((dias) => {
+                                return(
+                                    <>
+                                        <CheckBox id={dias.id} onClick={(e) => {
+                                            selecionadoDia(dias.id)
+                                            setToggle(!toggle)
+                                            
+                                        }}>{dias.name}
+                                        </CheckBox>
+                                    </>
+                                );
                             })}
-                        />
-                        {checkDays.map((dias) => {
-                            return(
-                                <>
-                                    <CheckBox  onClick={(e) => {
-                                        selecionadoDia(dias.id)
-                                        setToggle(!toggle)
-                                    }}>{dias.name}
-                                    </CheckBox>
-                                </>
-                            );
-                        })}
-                         <Botoes >
-                            <h1 onClick={() => {
-                                alert('Se deseja realmente excluir esta rotina, clique em ok')
-                                setHabitoCriado(!habitoCriado)
-                                createHabits.nome = ''}}> Cancelar
-                            </h1>
-                            <Salvar>
-                                Salvar
-                            </Salvar>
-                        </Botoes>
+                            <Botoes >
+                                <h1 onClick={() => {
+                                    alert('Se deseja realmente excluir esta rotina, clique em ok')
+                                    setHabitoCriado(!habitoCriado)
+                                    createHabits.nome = ''}}> Cancelar
+                                </h1>
+                                <Salvar type='submit'>
+                                    Salvar
+                                </Salvar>
+                            </Botoes>
+                        </form>
                     </TaskHabit>
                 </>
             );
@@ -99,24 +110,21 @@ export default function TelaHabitos(){
             </>
         );
     }   
-    function botaoCOlor(){
-        if(toggle === false){
-            const cor = "background: #CFCFCF;"
-        }else{
-            const cor = "background: #FFFFFF;"
-        }
-    }
+
     useEffect(() => {
         const promise = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily', config);
         promise.then(response => {
             console.log(response.data)
             setHabits(response.data)
+            setNumPorcentage(habits.length)
         })
+
         promise.catch((err) => {
             console.log('deu erro')
             console.log(err.message)
         })
     },[])
+    
     function showHabits(){
         if(habits.length > 0){
             habits.map((habts) => {
@@ -142,7 +150,8 @@ export default function TelaHabitos(){
             </>
         );
     }
-    
+    const percentage = 10;
+
     return(
         <>  
             <Habitos>
@@ -157,6 +166,23 @@ export default function TelaHabitos(){
                 </AddHabito>
                 {criarHabito()}
                 {showHabits()}
+                <DivFixa>
+                    <Porcentagem > 
+                    <CircularProgressbar
+                        value={percentage}
+                        maxValue={numPorcentage}
+                        text={`Hoje`}
+                        background
+                        backgroundPadding={6}
+                        styles={buildStyles({
+                        backgroundColor: "#3e98c7",
+                        textColor: "#fff",
+                        pathColor: "#fff",
+                        trailColor: "transparent"
+                        })}
+                    />
+                    </Porcentagem>
+                </DivFixa>
             </Habitos>
         </>
     );
@@ -245,18 +271,18 @@ const CheckBox =styled.button`
     height: 30px;
     margin-top:8px;
     margin-right:4px;
-    background: ${({toggle}) => toggle ? '#FFFFFF': '#CFCFCF'};
     border: 1px solid #D5D5D5;
     border-radius: 5px;
     cursor: pointer;
-    &:hover {
-	    background: #0864a5;
+    background: #CFCFCF;
+    color: #FFFFFF;
+    &:hover{
+        background: #0864a5;
     }
     
     font-family: 'Lexend Deca';
     font-size: 20px;
     line-height: 25px;
-    color: ${() => 'background '? '#CFCFCF' : '#FFFFFF'};
 `;
 const Botoes = styled.div`
     height:40px;
@@ -290,4 +316,15 @@ const Salvar =styled.button`
     &:hover {
 	    background: #0864a5;
     }
+`;
+// =========================================
+const Porcentagem = styled.div`
+    position:fixed;
+    margin-top: 270px;
+    margin-left: 120px;
+    width: 100px; 
+    height: 100px;
+`;
+const DivFixa = styled.div`
+    position: fixed;
 `;

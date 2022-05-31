@@ -4,27 +4,32 @@ import TodayDate from "./TodayDate";
 import {useState, useEffect } from "react";
 import axios from "axios";
 import check from "../Assets/img/check.png"
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 
 
 
 export default function TelaHoje(){
     const [habits, setHabits] = useState ([]);
-
+    const [numPorcentage, setNumPorcentage] = useState();
+    
     const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem('TokenLogin')}` }
+        headers: { Authorization: `Bearer ${sessionStorage.getItem('TokenLogin')}` }
     };
     useEffect(() => {
         const promise = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today', config);
         promise.then(response => {
             console.log(response.data)
             setHabits(response.data)
+            setNumPorcentage(habits.length)
         })
         promise.catch((err) => {
             console.log('deu erro')
             console.log(err.message)
         })
     },[])
+    
     function showHabits(){
         if(habits.length > 0){
             habits.map((habts) => {
@@ -51,16 +56,29 @@ export default function TelaHoje(){
         );
         
     }
+    const value = 0;
+
     return(
         <>
             <Conteiner>
                 <Empurra></Empurra>
                 <TodayDate />
                 {showHabits()}
+
+                <Porcentagem > 
+                    <CircularProgressbar value={value} maxValue={numPorcentage} text='Hoje' />
+                </Porcentagem>
+
             </Conteiner>
         </>
     );
 }
+const Porcentagem = styled.div`
+    margin-top: 270px;
+    margin-left: 120px;
+    width: 100px; 
+    height: 100px;
+`;
 const Conteiner = styled.div`
     height: 585px;
     background: #F2F2F2;

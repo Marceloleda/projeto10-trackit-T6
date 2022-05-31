@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
-
 import logo from "../Assets/img/Group 8.png"
 
 
@@ -19,6 +18,7 @@ export default function TelaCadastro(){
     });
     function cadastrar(event){
         event.preventDefault();
+       
         const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up`;
         const promise = axios.post(URL, {
             email: cadastro.email,
@@ -27,11 +27,13 @@ export default function TelaCadastro(){
             password: cadastro.senha
         })
         promise.then((response) => {
+           
             console.log('deu certo');
             navigate('/');
 
         })
         promise.catch(err => {
+           
             alert(`Algo deu errado, tente novamente! :: erro ${err.message}`)
             console.log(err.message)
         })
@@ -65,7 +67,9 @@ export default function TelaCadastro(){
                                 foto: e.target.value
                             })
                             } required />
-                        <Botao type='submit' >Cadastrar</Botao>
+                        <Botao type='submit' >
+                            Cadastrar
+                        </Botao>
                     </form>
                 </Conteiner>
             </Login>
