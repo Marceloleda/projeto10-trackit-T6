@@ -7,6 +7,7 @@ import check from "../Assets/img/check.png"
 import {CircularProgressbar, CircularProgressbarWithChildren, buildStyles} from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import MenuFooter from './MenuFooter';
+import { Link } from 'react-router-dom';
 
 export default function TelaHabitos(){
     const checkDays = [
@@ -167,21 +168,23 @@ export default function TelaHabitos(){
                 {criarHabito()}
                 {showHabits()}
                 <DivFixa>
-                    <Porcentagem > 
-                    <CircularProgressbar
-                        value={percentage}
-                        maxValue={numPorcentage}
-                        text={`Hoje`}
-                        background
-                        backgroundPadding={6}
-                        styles={buildStyles({
-                        backgroundColor: "#3e98c7",
-                        textColor: "#fff",
-                        pathColor: "#fff",
-                        trailColor: "transparent"
-                        })}
-                    />
-                    </Porcentagem>
+                    <Link to={'/hoje'}>
+                        <Porcentagem > 
+                        <CircularProgressbar
+                            value={percentage}
+                            maxValue={numPorcentage}
+                            text={`Hoje`}
+                            background
+                            backgroundPadding={6}
+                            styles={buildStyles({
+                            backgroundColor: "#3e98c7",
+                            textColor: "#fff",
+                            pathColor: "#fff",
+                            trailColor: "transparent"
+                            })}
+                        />
+                        </Porcentagem>
+                    </Link>
                 </DivFixa>
             </Habitos>
         </>
